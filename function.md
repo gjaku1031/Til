@@ -21,10 +21,10 @@ SELECT 1 > '2mega';
 
 ```sql
 SELECT IFNULL(NULL, '값이 없음');
-SELECT NVL(NULL, '값이 없음'); -- 10.3 버전부터
+SELECT NVL(NULL, '값이 없음'); -- ⛔10.3 버전부터 지원
 ```
 
-### NVL2(수식1, 수식2, 수식3) cf> 10.3 버전부터 지원
+### NVL2(수식1, 수식2, 수식3) ⛔10.3 버전부터 지원
 > 수식1이 NULL 이면 수식2, 아니면 수식3 반환
 
 
@@ -60,7 +60,7 @@ SELECT CONCAT_WS('/', '2024', '12', '16');
 SELECT ELT(2, '하나', '둘', '셋');
 SELECT FIELD('둘', '하나', '둘', '셋');
 SELECT FIND_IN_SET('둘', '하나,둘,셋');
-SELECT INSTR('하나 둘 셋', '둘'); -- cf> 띄어쓰기
+SELECT INSTR('하나 둘 셋', '둘'); -- ⛔띄어쓰기
 SELECT LOCATE('둘', '하나 둘 셋');
 -- result --
 둘
@@ -107,7 +107,7 @@ abc
 > 문자열을 길이만큼 왼쪽(오른쪽)으로 늘린 후, 빈 곳을 해당 문자열로 채움
 
 ```sql
-SELECT LPAD('HELLO', 10); -- 3번째 매개 생략시 공백
+SELECT LPAD('HELLO', 10); -- 💡3번째 매개 생략시 공백
 ```
 
 ### LTRIM, RTRIM, TRIM(문자열)
@@ -115,7 +115,7 @@ SELECT LPAD('HELLO', 10); -- 3번째 매개 생략시 공백
 
 
 ```sql
--- TRIM(<방향> <자를 문자열> FROM <문자열>) cf> 띄어쓰기로 구분
+-- TRIM(<방향> <자를 문자열> FROM <문자열>) ⛔띄어쓰기로 구분
 SELECT TRIM(BOTH 'Z' FROM 'ZZZHELLOZZZ');
 SELECT TRIM(LEADING 'Z' FROM 'ZZZHELLOZZZ');
 SELECT TRIM(TRAILING 'Z' FROM 'ZZZHELLOZZZ');
@@ -139,10 +139,10 @@ ZZZHELLO
 
 ```sql
 SELECT SUBSTRING('대한민국만세', 3);
-SELECT SUBSTRING('대한민국만세' FROM 3); -- cf> 띄어쓰기로 구분
+SELECT SUBSTRING('대한민국만세' FROM 3); -- ⛔띄어쓰기로 구분
 SELECT SUBSTRING('대한민국만세', 3, 2);
 SELECT SUBSTRING('대한민국만세' FROM 3 FOR 2);
-SELECT SUBSTRING('대한민국만세', -2, 2); -- 음수는 오른쪽부터 셈
+SELECT SUBSTRING('대한민국만세', -2, 2); -- 💡음수는 오른쪽부터 셈
 -- result --
 한국만세
 한국만세
@@ -155,7 +155,7 @@ SELECT SUBSTRING('대한민국만세', -2, 2); -- 음수는 오른쪽부터 셈
 ### SUBSTRING_INDEX(문자열, 구분자, 횟수)
 > 문자열에서 구분자가 왼쪽 횟수 번째 나오면 그 이후 버림(횟수가 음수이면 오른쪽부터 세고 왼쪽을 버림)
 
-## 4. 수학 함수
+## 4.수학 함수
 
 ### 올림, 내림, 반올림
 ``` sql
@@ -183,7 +183,7 @@ SELECT TRUNCATE(123.456, 2);
 ### RAND()
 > 0 ~ 1 미만의 실수
 
-## 날짜/시간 함수
+## 5.날짜/시간 함수
 
 ### ADDDATE(날짜, 차이),, SUBDATE(날짜, 차이),
 > 날짜 기준 차이를 더한(뺀) 날짜 변환
@@ -238,8 +238,8 @@ SELECT DAYOFWEEK(CURDATE()), -- 날짜의 요일을 숫자로 변환(1: 월...)
 ```sql
 SELECT MAKEDATE(2025, 100), -- 2025년에서 100일째 되는 날
        MAKETIME(22, 58, 55), -- 22:58:55
-       PERIOD_ADD(202505, 11) -- 25년 05월에 11개월 이후
-       PERIOD_DIFF(202505, 2024505) -- 25년 5월 - 24년 5월
+       PERIOD_ADD(202505, 11), -- 25년 05월에 11개월 이후
+       PERIOD_DIFF(202505, 2024505); -- 25년 5월 - 24년 5월
 ```
 
 ### QUATER(날짜)
@@ -247,3 +247,45 @@ SELECT MAKEDATE(2025, 100), -- 2025년에서 100일째 되는 날
 
 ### TIME_TO_SEC(시간)
 > 시간을 초 단위로 반환
+
+## 6. 윈도우 함수
+> 행과 행 사이의 관계를 위한 함수
+
+### A. 순위 함수
+> 데이터를 순서대로 번호 매기거나, 특정 조건에 따라 순위 매기기 가능
+
+#### a. ROW_NUMBER()
+> 순번 매
+
+
+```sql
+-- ORDER BY height DESC 키로 내림차순 정렬
+-- 이후 ROW_NUMBER()로 순번을 매김
+SELECT ROW_NUMBER() OVER(ORDER BY height DESC);
+```
+
+#### b. RANK()
+>
+
+#### c. DENSE_RANK()
+>
+
+#### d. NTILE(n)
+> 전체 인원을 키 순서로 세운 후에 n개의 그룹으로 분할
+
+### B. 분석 함수
+> 다른 행의 데이터를 참조하는 함수
+
+#### a. LEAD(a, n), LAG(a, n)
+> n행 이후(이전)의 행
+
+```sql
+SELECT LEAD(height, 1) OVER (ORDER BY height desc);
+```
+
+#### b. FIRST_VALUE(), LAST_VALUE()
+> 가장 큰(작은) 값
+
+```sql
+SELECT FIRST_VALUE(height) OVER(PARTITION BY addr ORDER BY height DESC); -- 지역별
+```
