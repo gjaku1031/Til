@@ -10,11 +10,13 @@ SELECT 1 > '2mega';
 399
 0 -- 1 : true, 0 : false
 ```
+&nbsp;
 
 ## 2. 제어 흐름 함수
 
 ### IF(수식, 참, 거짓)
 > 수식이 참 또는 거짓인지 결과에 따라서 분기하는 함수
+
 
 ### IFNULL(수식1, 수식2)
 > 수식 1이 NULL이 아니면 수식 1이 변환, 수식 1이 NULL이면 수식 2 반환
@@ -27,7 +29,7 @@ SELECT NVL(NULL, '값이 없음'); -- ⛔10.3 버전부터 지원
 ### NVL2(수식1, 수식2, 수식3) ⛔10.3 버전부터 지원
 > 수식1이 NULL 이면 수식2, 아니면 수식3 반환
 
-
+&nbsp;
 
 ## 3. 문자열 함수
 
@@ -142,7 +144,7 @@ SELECT SUBSTRING('대한민국만세', 3);
 SELECT SUBSTRING('대한민국만세' FROM 3); -- ⛔띄어쓰기로 구분
 SELECT SUBSTRING('대한민국만세', 3, 2);
 SELECT SUBSTRING('대한민국만세' FROM 3 FOR 2);
-SELECT SUBSTRING('대한민국만세', -2, 2); -- 💡음수는 오른쪽부터 셈
+SELECT SUBSTRING('대한민국만세', -2, 2); -- 음수는 오른쪽부터 셈
 -- result --
 한국만세
 한국만세
@@ -155,7 +157,9 @@ SELECT SUBSTRING('대한민국만세', -2, 2); -- 💡음수는 오른쪽부터 
 ### SUBSTRING_INDEX(문자열, 구분자, 횟수)
 > 문자열에서 구분자가 왼쪽 횟수 번째 나오면 그 이후 버림(횟수가 음수이면 오른쪽부터 세고 왼쪽을 버림)
 
-## 4.수학 함수
+&nbsp;
+
+## 4. 수학 함수
 
 ### 올림, 내림, 반올림
 ``` sql
@@ -183,9 +187,11 @@ SELECT TRUNCATE(123.456, 2);
 ### RAND()
 > 0 ~ 1 미만의 실수
 
-## 5.날짜/시간 함수
+&nbsp;
 
-### ADDDATE(날짜, 차이),, SUBDATE(날짜, 차이),
+## 5. 날짜/시간 함수
+
+### ADDDATE(날짜, 차이), SUBDATE(날짜, 차이)
 > 날짜 기준 차이를 더한(뺀) 날짜 변환
 >>  DATE_ADD(),  SUBDATE()와 동일
 ```sql
@@ -248,6 +254,8 @@ SELECT MAKEDATE(2025, 100), -- 2025년에서 100일째 되는 날
 ### TIME_TO_SEC(시간)
 > 시간을 초 단위로 반환
 
+&nbsp;
+
 ## 6. 윈도우 함수
 > 행과 행 사이의 관계를 위한 함수
 
@@ -255,7 +263,7 @@ SELECT MAKEDATE(2025, 100), -- 2025년에서 100일째 되는 날
 > 데이터를 순서대로 번호 매기거나, 특정 조건에 따라 순위 매기기 가능
 
 #### a. ROW_NUMBER()
-> 순번 매
+> 순번을 매김
 
 
 ```sql
@@ -264,11 +272,13 @@ SELECT MAKEDATE(2025, 100), -- 2025년에서 100일째 되는 날
 SELECT ROW_NUMBER() OVER(ORDER BY height DESC);
 ```
 
-#### b. RANK()
->
+#### b. RanK()
+> 동일한 순위 이후의 등수를 동일한 인원수만큼 건너뛰고 증가
+>> 1, 1, 3, 4, ...
 
 #### c. DENSE_RANK()
->
+> 동일한 순위 이후 등수를 1증가
+>> 1, 1, 1, 2, ...
 
 #### d. NTILE(n)
 > 전체 인원을 키 순서로 세운 후에 n개의 그룹으로 분할
@@ -289,3 +299,4 @@ SELECT LEAD(height, 1) OVER (ORDER BY height desc);
 ```sql
 SELECT FIRST_VALUE(height) OVER(PARTITION BY addr ORDER BY height DESC); -- 지역별
 ```
+
